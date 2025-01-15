@@ -1,0 +1,14 @@
+services:
+  html-parser-service:
+    image: html-parser-service:1.0
+    container_name: html-parser-service
+    ports:
+      - "8080:8080"
+
+  html-parser-ui:
+    image: html-parser-ui:1.0
+    container_name: html-parser-ui
+    ports:
+      - "80:80"
+    depends_on:
+      - html-parser-service
