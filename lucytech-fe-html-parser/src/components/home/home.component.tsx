@@ -57,10 +57,10 @@ const Home: FC = () => {
     }
 
     return (
-        <Content style={{position: 'relative', height: '100vh'}}>
+        <Content style={{position: 'relative'}}>
             {contextHolder}
             <Loader loading={loading}/>
-            <Row justify="center" align="middle" style={{height: '100%'}}>
+            <Row justify="center" align="middle">
                 <Col span={18} style={{textAlign: 'center'}}>
                     <Row justify="space-between">
                         <Col span={18}>

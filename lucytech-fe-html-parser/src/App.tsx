@@ -10,7 +10,7 @@ const {Header, Content, Footer} = Layout;
 function App() {
     return (
         <BrowserRouter>
-            <Layout style={{minHeight: '100vh', width: '100vh'}}>
+            <Layout style={{height: '90vh', width: '100vh'}}>
                 <Header style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
                     <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['1']}>
                         <Menu.Item key="title" disabled>
@@ -23,7 +23,7 @@ function App() {
                     display: 'flex',
                     justifyContent: 'center',
                     alignItems: 'center',
-                    padding: '0 50px',
+                    padding: '0 25px',
                     marginTop: 64
                 }}>
                     <div className="site-layout-content" style={{width: '100%', textAlign: 'center'}}>
