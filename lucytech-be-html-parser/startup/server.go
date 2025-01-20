@@ -1,6 +1,7 @@
 package startup
 
 import (
+	"encoding/json"
 	"github.com/gorilla/mux"
 	"log"
 	"lucytech/internal/controller"
@@ -24,10 +25,18 @@ func enableCORS(next http.Handler) http.Handler {
 	})
 }
 
+func handleNotFoundError(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	w.WriteHeader(http.StatusNotFound)
+	json.NewEncoder(w).Encode(map[string]string{"error": "Resource not found"})
+}
+
 func Server() {
 	r := mux.NewRouter()
 
 	r.HandleFunc("/api/url-info", controller.GetHTMLContextMetadata).Methods("POST")
+
+	r.NotFoundHandler = http.HandlerFunc(handleNotFoundError)
 
 	crsRouter := enableCORS(r)
 

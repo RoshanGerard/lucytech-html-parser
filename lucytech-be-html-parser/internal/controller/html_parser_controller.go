@@ -15,10 +15,18 @@ func GetHTMLContextMetadata(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	responseDto := service.ParseHTML(requestDto.Url)
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 
-	err := json.NewEncoder(w).Encode(responseDto)
+	responseDto, code, err := service.ParseHTML(requestDto.Url)
+
+	if err != nil {
+		w.Header().Set("Content-Type", "application/json; charset=utf-8")
+		w.WriteHeader(code)
+		json.NewEncoder(w).Encode(map[string]string{"error": err.Error()})
+		return
+	}
+
+	err = json.NewEncoder(w).Encode(responseDto)
 
 	if err != nil {
 		return

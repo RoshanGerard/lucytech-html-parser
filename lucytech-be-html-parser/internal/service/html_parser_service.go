@@ -19,7 +19,7 @@ type HTMLParserService struct {
 	htmlDoc     goquery.Document
 }
 
-func HtmlParserConstruct(url string) *HTMLParserService {
+func HtmlParserConstruct(url string) (*HTMLParserService, int, error) {
 
 	instance := &HTMLParserService{
 		url:         url,
@@ -29,9 +29,13 @@ func HtmlParserConstruct(url string) *HTMLParserService {
 	_, _, err := instance.getHtmlContext(url)
 
 	if err != nil {
-		return nil
+		return nil, http.StatusInternalServerError, err
 	}
-	return instance
+
+	//if err != nil {
+	//	return nil
+	//}
+	return instance, http.StatusOK, nil
 }
 
 func (service *HTMLParserService) getHtmlContext(url string) (string, *goquery.Document, error) {
@@ -50,7 +54,7 @@ func (service *HTMLParserService) getHtmlContext(url string) (string, *goquery.D
 	)
 
 	if err != nil {
-		panic(err)
+		return "", nil, err
 	}
 
 	// Step 2: Parse the HTML content to html.Node
@@ -175,8 +179,12 @@ func (service *HTMLParserService) isLoginPage() bool {
 	return usernameExists && passwordExists && buttonExists
 }
 
-func ParseHTML(url string) models.HtmlParseResponseDto {
-	service := HtmlParserConstruct(url)
+func ParseHTML(url string) (models.HtmlParseResponseDto, int, error) {
+	service, code, htmlParseErr := HtmlParserConstruct(url)
+
+	if htmlParseErr != nil {
+		return models.HtmlParseResponseDto{}, http.StatusInternalServerError, htmlParseErr
+	}
 
 	htmlVersion, err := service.getHtmlVersion()
 
@@ -204,5 +212,5 @@ func ParseHTML(url string) models.HtmlParseResponseDto {
 		InternalLinks: internalLinks,
 		ExternalLinks: externalLinks,
 		IsLoginPage:   isLoginPage,
-	}
+	}, code, nil
 }
